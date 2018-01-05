@@ -14,6 +14,16 @@
       </div>
       
     </div>
+    <div class="row">
+      <div class="col-md-1 col-lg-1 col-xs-1 col-sm-1 col-lg-1">
+       </div>
+      <div class="col-md-5 col-lg-5 col-xs-5 col-sm-5 col-lg-5">
+        <DangDiChuyen/>
+      </div>
+      <div class="col-md-5 col-lg-5 col-xs-5 col-sm-5 col-lg-5">
+        <DaHoanThanh/>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -22,11 +32,13 @@
   import ChuaDinhVi from './components/ChuaDinhVi.vue';
   import DaDinhVi from './components/DaDinhVi.vue';
   import DaCoXeNhan from './components/DaCoXeNhan.vue';
+  import DangDiChuyen from './components/DangDiChuyen.vue';
+  import DaHoanThanh from './components/DaHoanThanh.vue';
 
   export default {
     name: 'app',
     components: {
-      ChuaDinhVi, DaDinhVi, DaCoXeNhan
+      ChuaDinhVi, DaDinhVi, DaCoXeNhan, DangDiChuyen,DaHoanThanh
     },
   }
 </script>

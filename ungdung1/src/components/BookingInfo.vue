@@ -7,7 +7,7 @@
 						<label for="txtSDT">Số điện thoại</label>
 					</div>
 					<div class="col-md-10 col-lg-10 col-sm-10 col-xs-10">
-						<input type="text" name="" id="txtSDT" v-model="SDT"><br>
+						<input type="text" name="" id="txtSDT" v-model="SDT" v-on:change = "laySDT()"><br>
 					</div>
 				</div>
 				<br>
@@ -63,13 +63,13 @@
 			return {
 					DiaChi: "",
 					GhiChu: "",
-					lat: "",
-					loaiXe: "",
-					long: "",
-					ngayGio: "",
+					Lat: "",
+					LoaiXe: "",
+					Long: "",
+					NgayGio: "",
 					SDT: "",
-					tinhTrang: "",
-					xeRuoc: ""
+					TinhTrang: "",
+					XeRuoc: ""
 			}
 		},
 
@@ -86,8 +86,14 @@
 							sdt: this.SDT,
 							tinhTrang: "chua dinh vi",
 							xeRuoc: ""
-						})
-					}
+						});
+					},
+
+					laySDT()
+					{
+						var sdt = $('#txtSDT').val();
+						this.$emit('sdtThayDoi', sdt);
+					},
 		},
 
 	}

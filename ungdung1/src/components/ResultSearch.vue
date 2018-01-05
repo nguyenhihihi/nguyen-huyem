@@ -1,6 +1,14 @@
 <template>
 	<div id = "chiTietSDT">
-		<h1 >LỊCH SỬ CỦA SĐT: <b v-if="list.length > 0">{{list[0].sdt}}</b></h1>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		<br/>	
+
+		<h1  >KẾT QUẢ TÌM KIẾM CỦA SĐT: <b v-if="list.length > 0">{{list[0].sdt}} </b></h1>
 		<table id='tabDetail' class='table table-hover'>
 			<thead>
 					<tr>  
@@ -20,7 +28,7 @@
 			
 		<tbody v-else>
 			<tr>
-			Không có lịch sử.
+			Không kết quả.
 			</tr>
 		</tbody>
 		</table>

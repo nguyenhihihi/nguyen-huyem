@@ -8,7 +8,7 @@
 				<div id="Search">
 				<label for="txtsearch">Số điên thoại: </label>
 				<input type="" name="" id="txtsearch">
-				<button id="btnSearch" type="button" class="btn btn-primary">Tìm kiếm</button>
+				<button id="btnSearch" type="button" class="btn btn-primary" @click = "search()">Tìm kiếm</button>
 			</div>
 			<br><br>
 			<div id="chiTiet">
@@ -22,6 +22,13 @@
 
 <script>
 	export default {
-		name: 'Search'
+		name: 'Search',
+		methods: {
+			search(){
+
+				var sdt = $('#txtsearch').val();
+				this.$emit('searchSDT', sdt);
+			}
+		},
 	}
 </script>
