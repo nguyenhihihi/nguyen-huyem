@@ -15,12 +15,13 @@
          	 		<td> {{req.sdt}}</td>
          	 		<td>{{req.diaChi}}</td>
          	 		<td>{{req.ghiChu}}</td>
-                    <td>{{req.ngayGio}}</td>
+              <td>{{req}}</td>
          	 		<td>
-         	 			<a href="'/chitiet?key=' + req.key" class='btn btn-xs btn-info'>
-                   		 <span class='glyphicon glyphicon-globe'></span> 
-                   		</a> 
-                	</td>
+                <router-link :key= "req.key" :to = "'/bando/' + req.key">
+                  <span class='glyphicon glyphicon-globe'></span> 
+                </router-link>
+                   		 
+              </td>
          	 	</tr>
          	 </tbody>
               <tbody v-else>
