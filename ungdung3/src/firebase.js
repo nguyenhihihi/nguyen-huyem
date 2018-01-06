@@ -17,3 +17,5 @@ export const DsChuaDinhVi =  req.orderByChild('tinhTrang').equalTo('chua dinh vi
 export const DsDangDiChuyen =  req.orderByChild('tinhTrang').equalTo('dang di chuyen');
 export const DsDaHoanThanh =  req.orderByChild('tinhTrang').equalTo('da hoan thanh');
 
+export const Driver =  db.ref('/driver')
+

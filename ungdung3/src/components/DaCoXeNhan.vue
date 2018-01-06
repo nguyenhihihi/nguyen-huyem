@@ -15,9 +15,9 @@
          	 		<td> {{req.sdt}}</td>
          	 		<td>{{req.diaChi}}</td>
          	 		<td>{{req.ghiChu}}</td>
-              <td>{{req}}</td>
+              <td>{{req[".key"]}}</td>
          	 		<td>
-                <router-link :key= "req.key" :to = "'/bando/' + req.key">
+                <router-link :key= "req['.key']" :to = "'/bando/' + req['.key']">
                   <span class='glyphicon glyphicon-globe'></span> 
                 </router-link>
                    		 
