@@ -1,5 +1,8 @@
 <template>
 	<div>
+		<router-link :to = "'/'">
+                 <h4> <span class='glyphicon glyphicon-arrow-left' style="font-size: 16px;"></span> Quay lại </h4>
+                </router-link> 
 		<h1>Đây là bản đồ: {{key}}</h1>
 		<div id = "map">
 			<!-- XE: {{xe}}<br/> -->
@@ -109,7 +112,7 @@ export default{
 </script>
   <style type="text/css">
      #map {
-        height: 550px;
+        height: 700px;
         width: 100%;
        }
        h1{
