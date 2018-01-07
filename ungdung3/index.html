@@ -4,15 +4,38 @@
     <meta charset="utf-8">
     <title>Thông tin hệ thống</title>
     <link rel="stylesheet" type="text/css" href="./src/assets/bootstrap-3.3.7/css/bootstrap.min.css">
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBkVgu5YWGSRDmSdla9AlOE-e-QuJTGF_U">
-    </script>
+      <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
   </head>
   <body>
     <div id="app"></div>
     <script src="./src/assets/jquery-3.1.1.min.js"></script>
     <script src="./src/assets/bootstrap-3.3.7/js/bootstrap.min.js"></script>    
     <script src="/dist/build.js"></script>
+     <script type="text/javascript">
+      var map;
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: -34.397, lng: 150.644},
+          zoom: 8
+        });
+      }
+    </script>
      <!-- <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script> -->
+     <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBkVgu5YWGSRDmSdla9AlOE-e-QuJTGF_U">
+    </script> 
+   
   </body>
 </html>

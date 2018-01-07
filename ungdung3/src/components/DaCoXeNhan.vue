@@ -19,8 +19,7 @@
          	 		<td>
                 <router-link :key= "req['.key']" :to = "'/bando/' + req['.key']">
                   <span class='glyphicon glyphicon-globe'></span> 
-                </router-link>
-                   		 
+                </router-link>                   		 
               </td>
          	 	</tr>
          	 </tbody>
