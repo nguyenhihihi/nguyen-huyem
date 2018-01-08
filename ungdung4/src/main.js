@@ -7,6 +7,9 @@ import VueRouter from 'vue-router';
 import Login from './components/login.vue';
 import TaiXe from './components/taixe.vue';
 import DangKy from './components/register.vue';
+import YeuCauChoXacNhan from './components/YeuCauChoXacNhan.vue';
+import Depart from './components/Depart.vue';
+import KetThucChuyenDi from './components/KetThucChuyenDi.vue';
 
 Vue.use(VueFire);
 
@@ -21,8 +24,26 @@ var routes = [
          meta: {
           requiresAuth: true
         }
-
+    },
+    {
+        path:'/request', component: YeuCauChoXacNhan,
+         meta: {
+          requiresAuth: true
+        }
+    },
+      {
+        path:'/depart', component: Depart,
+         meta: {
+          requiresAuth: true
+        }
+    },
+      {
+        path:'/finish', component: KetThucChuyenDi,
+         meta: {
+          requiresAuth: true
+        }
     }
+
 ];
 
 Vue.use(VueRouter);
@@ -43,7 +64,7 @@ router.beforeEach((to, from, next) => {
         if (localStorage.access_token && localStorage.access_token === '1234567890') {
             next();
         } else {
-            next('login');
+            next('/login');
         }
     } else {
         next();
