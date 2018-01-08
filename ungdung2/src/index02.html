@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Ứng dụng 2</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="/assests/bootstrap-3.3.7-dist/css/bootstrap.min.css">
+    <style type="text/css">
+    	#map {
+	        height: 100%;
+	        width: 80%;
+	        float: left;
+      	}
+		#listofpoints{
+			height: 100%;
+			width: 20%;
+			float: right;
+		}
+      /* Optional: Makes the sample page fill the window. */
+		html, body {
+		  height: 100%;
+		  margin: 0;
+		  padding: 0;
+		}
+
+    </style>
+</head>
+
+<body>
+	<div id="map"></div>
+	<div id="listofpoints">
+		<center>
+			<h3> DANH SÁCH CÁC ĐIỂM CHƯA ĐỊNH VỊ</h3>
+		</center>
+		<div id ="danhsachcacdiemchuadinhvi">
+		</div>
+		
+	</div>
+    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+   	<script type="text/javascript" src="/assests/jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="/assests/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+	<script>
+	  // Initialize Firebase
+	  var config = {
+	    apiKey: "AIzaSyBh17FyeY9MbnXWXbEWm7zuBGtPWQbn6Os",
+	    authDomain: "datxe-ce3c3.firebaseapp.com",
+	    databaseURL: "https://datxe-ce3c3.firebaseio.com",
+	    projectId: "datxe-ce3c3",
+	    storageBucket: "datxe-ce3c3.appspot.com",
+	    messagingSenderId: "742408484121"
+	  };
+	  firebase.initializeApp(config);
+	</script>
+
+    <script type="text/javascript">
+    	var map;
+		var marker;
+		var markers=[];
+    	var ListDistance = [];
+    	var locationsOfCars =[];
+    	var keymainpoint;
+    	var dfd = $.Deferred();
+    	var infoWindowPoint;
+    	var infoWindwMoto;
+    	var markerCluster;
+    	/***
+    		//Lấy danh sách tất cả các điểm muốn đặt xe
+    	*/
+    	var ref = firebase.database().ref().child('/reqDatXe');   	
+		ref.on("value", function(snapshot) {
+			var str = "<table id='KetQua' class='table table-hover'>"+
+	          	"<thead><tr>" +  
+	            " <th>SĐT</th> " +
+	            "<th>Địa chỉ</th>" +
+	            "<th> <th>" +
+	          	"</tr><thead><tbody>"; 
+		    var temp="";
+			Object.keys(snapshot.val()).forEach(function(key)
+			   {
+			   	
+			   	if (snapshot.val()[key].tinhTrang == "chua dinh vi")
+			   	{	
+			   		str +=  "<tr>" +
+			            "<td>"+ snapshot.val()[key].sdt + "</td>" +
+			            "<td>"+ snapshot.val()[key].diaChi + "</td>" +
+			          	" <td ><a href='javascript:;' class='test' data-loaixe= '" + snapshot.val()[key].loaiXe + "' data-id = "+ key +" data-diachi = '" + snapshot.val()[key].diaChi + "'> " +
+			                    "<span class='glyphicon glyphicon-map-marker'></span> </a> </td>" +
+			          	"</tr>";
+			   	}
+
+			});
+			   str += "</tbody></table>";
+			   console.log(str);
+			   $('#danhsachcacdiemchuadinhvi').empty();
+			   	$('#danhsachcacdiemchuadinhvi').append(str);
+			}, function (error) {
+			   console.log("Error: " + error.code);
+		});
+
+		/***
+    		Lấy danh sách tất cả xe có sẵn
+    	*/	
+    	var ref = firebase.database().ref().child('/driver');
+		ref.on("value", function(snapshot) {
+			locationsOfCars.splice(0);
+			var i = 0;
+			var str="";	
+		   Object.keys(snapshot.val()).forEach(function(key){
+			   	locationsOfCars.push({lat: snapshot.val()[key].lat, lng: snapshot.val()[key].lng, state: snapshot.val()[key].state, keyData: key, type: snapshot.val()[key].type });
+		   });
+		}, function (error) {
+		   console.log("Error: " + error.code);
+		});
+
+		/***
+			 Tính khoảng cách giữa 2 điểm
+		*/
+	    function rad(x) {
+			  return x * Math.PI / 180;
+		};
+				// Tính khoảng cách giữa 2 điểm
+		function getDistanc(mainpointlat, mainpointlng, p2) {
+		  	var R = 6378137; // Earth’s mean radius in meter
+			var dLat = rad(p2.lat - mainpointlat);
+			var dLong = rad(p2.lng - mainpointlng);
+			var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+		    Math.cos(rad(mainpointlat)) * Math.cos(rad(p2.lat)) *
+		    Math.sin(dLong / 2) * Math.sin(dLong / 2);
+			var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+			var d = R * c;
+			return d;
+		};
+	    function sleep(milliseconds) {
+			var start = new Date().getTime();
+			for (var i = 0; i < 1e7; i++) {
+				if ((new Date().getTime() - start) > milliseconds){
+				  break;
+				}
+			}
+		}
+	    function SearchMotorbike(locations, locationsOfCars, listDistance, keyData, mainpointlat, mainpointlng, typeOfMoto ){
+	    	console.log(locations);
+	   		for(i =0;i <locationsOfCars.length;i++){
+
+	        	if(ListDistance[i].distance>=1000)
+	        	{	
+	        		
+	        		var ref = firebase.database().ref('reqDatXe/' + keyData);
+        			ref.update({lat: mainpointlat, long: mainpointlng, tinhTrang: "da dinh vi"});
+        			      			
+			        // ShowMarkerCluster(locations, map);
+			        ShowMarkerCluster(locations);
+			        alert("Đã định vị nhưng không có xe đón");  
+	        		return;
+	        	}
+	        	if(locationsOfCars[ListDistance[i].index].state ==0 && locationsOfCars[ListDistance[i].index].type == typeOfMoto )
+	        	{	
+
+	        		var ref = firebase.database().ref('reqDatXe/' + keyData);
+        			ref.update({lat: mainpointlat, long: mainpointlng, tinhTrang: "da co xe nhan", xeRuoc: locationsOfCars[ListDistance[i].index].keyData });
+        			var ref = firebase.database().ref('driver/' + locationsOfCars[ListDistance[i].index].keyData );
+        			ref.update({state: 1});
+        			// ShowMarkerCluster(locations, map);
+        			ShowMarkerCluster(locations);
+        			alert("Có xe, thông tin của khách đã được gửi đến xe");
+	        		return;
+	        	}
+
+	        }
+	        alert("Không có xe");
+	    }
+    	function SortListDistance(mainpointlat, mainpointlng, keyData, map, typeOfMoto){
+    		ListDistance.splice(0);
+    		for(i =0;i<locationsOfCars.length; i++){
+    			ListDistance.push({index:i, distance: getDistanc(mainpointlat, mainpointlng, locationsOfCars[i])});
+    		}
+	    	ListDistance.sort(function(a,b){
+	        	return a.distance -b.distance;
+	        });
+	        var check =0;
+	        var locations = [];
+	        locations.splice(0);
+	        console.log(ListDistance);
+	        for(i =0;i<10;i++)
+	        {
+	        	locations.push(locationsOfCars[ListDistance[i].index]);
+	        }
+	        // ShowMarkerCluster(locations, map);
+	   		SearchMotorbike(locations, locationsOfCars,ListDistance,keyData, mainpointlat, mainpointlng, typeOfMoto);
+    	}
+    	
+        // Xác định tọa độ từ địa chỉ của người đặt xe
+    	function geocodeAddress(geocoder, resultsMap, infowindow, address, keyData, typeOfMoto) {
+		    geocoder.geocode({ 'address': address }, function(results, status) {
+		        if (status === 'OK') {
+		            resultsMap.setCenter(results[0].geometry.location);		            
+		            marker.setPosition(results[0].geometry.location);
+		            marker.setMap(map);
+		           	lat = parseFloat(results[0].geometry.location.lat().toFixed(6));
+		           	lng =  parseFloat(results[0].geometry.location.lng().toFixed(6));
+		           	SortListDistance(lat, lng, keyData, map, typeOfMoto);
+		        } else {
+
+		            alert('không tìm thấy:  ' + status);
+		            initMap();
+		            return;
+		        }
+		    });
+		}
+
+		//Xác định địa chỉ từ tọa độ
+		function reverseLocation(location, geocoder, infowindow) {
+		    geocoder.geocode({'location': location }, function(results, status) {
+		        if (status === 'OK') {
+		            if (results[0]) {
+		            //   map.setZoom(8);
+		                marker.setPosition(location);
+		                marker.setMap(map);
+		                infowindow.setContent(results[0].formatted_address);
+		                infowindow.open(map, marker);
+		            } else {
+		                window.alert('không tìm thấy');
+		            }
+		        } else {
+		            window.alert('Geocoder failed due to: ' + status);
+		        }
+		    });
+		}
+		function ShowMarkerCluster(locations){
+	  		
+	  		 var labels = 'ABCDEFGHIJ';
+	  		
+	  		 if(markers.length >0)
+	  		 {
+	  		 	 markerCluster.clearMarkers();
+	  		 }
+	        markers = locations.map(function(location, i) {
+	          return new google.maps.Marker({
+	            position: location,
+	            label: labels[i % labels.length]
+	          });
+	        });
+
+        // Add a marker clusterer to manage the markers.
+        markerCluster = new MarkerClusterer(map, markers,
+            {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+		}
+		function addMarker(location){
+	        var marker = new google.maps.Marker({
+	          position: location,
+	          map: map
+	        });
+	        markers.push(marker);
+	    }
+
+      // Sets the map on all markers in the array.
+
+	     function setMapOnAll(map){
+	        for (var i = 0; i < markers.length; i++) {
+	          markers[i].setMap(map);
+	        }
+	    }
+
+      // Removes the markers from the map, but keeps them in the array.
+	      function clearMarkers() {
+	        setMapOnAll(null);
+	      }
+
+      // Shows any markers currently in the array.
+	      function showMarkers() {
+	        setMapOnAll(map);
+	      }
+	      function deleteMarkers() {
+	        clearMarkers();
+	        markers = [];
+	    }
+      // Deletes all markers in the array by removing references to them.
+	      function deleteMarkers() {
+	        clearMarkers();
+	        markers = [];
+	      }
+		function initMap() {
+		    map = new google.maps.Map(document.getElementById('map'), {
+		        center: { lat: 10.756, lng: 106.644 },
+		        zoom: 12,
+		        disableDefaultUI: true
+		    });
+
+		    var geocoder = new google.maps.Geocoder();
+		    var reverse = new google.maps.Geocoder();
+		    var infowindow = new google.maps.InfoWindow;
+		    var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+		    marker = new google.maps.Marker(
+		    {
+		        position: {lat: 10.756, lng: 106.644 },
+		        draggable: true,
+		        icon:image,
+          		animation: google.maps.Animation.DROP
+
+		    });
+		   	google.maps.event.addListener(marker, 'dragend', function (event) {
+			  lat = this.getPosition().lat();
+			  lng = this.getPosition().lng();
+			  console.log("--------" + keymainpoint);
+			  var ref = firebase.database().ref('reqDatXe/' + keymainpoint);
+			  ref.update({lat: lat, long: lng});
+
+			   console.log(lat);
+			});
+	        $("#danhsachcacdiemchuadinhvi").on("click", "a", function(){
+	        	alert("Đang tiến hành định vị khách");
+				var keyData = $(this).data('id');
+				keymainpoint = $(this).data('id');
+				var loaixe = $(this).data("loaixe");
+				console.log(loaixe);
+				var address = $(this).closest('tr').find('td:nth-child(2)').text();
+				if(loaixe =="Xe Premium")
+				{
+				  	geocodeAddress(geocoder, map, infowindow, address,keyData, 1);
+				}
+				else{
+					geocodeAddress(geocoder, map, infowindow, address,keyData, 0);
+				}
+			});		   
+		}
+    </script>
+
+    <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
+    </script>
+    <script type="text/javascript" async defer
+        src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDJTOA87CcQlLti7qKEgz3MWladjpubdow&callback=initMap">
+	</script>
+</body>
+</html>
