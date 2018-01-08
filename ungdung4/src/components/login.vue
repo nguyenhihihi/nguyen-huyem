@@ -20,6 +20,10 @@
 						<span class="glyphicon glyphicon-user"></span>
 						Đăng nhập
 					</button>
+          <router-link :to = "'/register'" type="button" class="btn btn-block btn-primary">
+            <span class="glyphicon glyphicon-user"></span>
+            Đăng ký
+          </router-link>
 				</form>
 			</div>
 			<div class="col-sm-3 col-md-3 col-xl-3 col-lg-3"></div>
@@ -110,6 +114,7 @@ export default {
 
      if (kq == true)
      {
+      //set trang thai da dang nhap, dang ranh vao he thong
       this.$router.push('/taixe');
      }
 
