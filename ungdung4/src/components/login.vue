@@ -40,32 +40,81 @@ export default {
     	username: '',
     	password: '',
     	taixe:[],
+      taixe: null,
     }
   },
 
   methods: {
     login () {
-	var driver = Driver;
-    driver.on('value', function(snapshot){
-      if(self.taixe.length>0)
-        self.taixe.splice(0);
-      Object.keys(snapshot.val()).forEach(function(key){
-        var obj = {
-                    lat: snapshot.val()[key].lat,
-                    lng: snapshot.val()[key].lng,
-                    state: snapshot.val()[key].state,
-                    type: snapshot.val()[key].type,
-                    key:  key
-                    };
-         self.taixe.push(obj);   
-        });
-    });
-      if (this.username === 'huyen' && this.password === '123') {
-      	localStorage.access_token = '1234567890';
-        this.$router.push('/taixe');
-      } else {
-      	alert('login failed');
+      var self = this;
+      var us = self.username;
+      var ps = self.password;
+
+      var kq= false;
+
+	   var driver = Driver.orderByChild('username').equalTo(us);
+
+     driver.on('value', function(snapshot){
+
+      if (snapshot.val() != null){
+       // self.taixe = snapshot.val();
+       Object.keys(snapshot.val()).forEach(function(key){
+        self.taixe = snapshot.val[0];
+        console.log(self.taixe);
+       //  console.log(snapshot.val()[key].username);
+       //  if (snapshot.val()[key].username == us && snapshot.val()[key].password == ps)
+       // {
+
+       //    self.taixe = snapshot.val()[key];
+       //    console.log(self.taixe);
+       //   // alert('Đăng nhập thành không.');
+       //    localStorage.key= key;
+       //    localStorage.key= '1234567890';
+       //    kq = true;
+       //    console.log(kq);
+       //     this.$router.push('/taixe');
+       //  } 
+       //  else
+       //  {
+       //    alert('Sai mật khẩu');
+       //    return;
+       //  }
+       });
+        
+        console.log('tai zze');
+         console.log(self.taixe);
       }
+      else 
+      {
+        alert('Đăng nhập không thành không.')
+        console.log('rong');
+        return;
+      }
+
+     });
+      
+      // console
+      // this.$router.push('/taixe');
+    // driver.on('value', function(snapshot){
+    //   if(self.taixe.length>0)
+    //     self.taixe.splice(0);
+    //   Object.keys(snapshot.val()).forEach(function(key){
+    //     var obj = {
+    //                 lat: snapshot.val()[key].lat,
+    //                 lng: snapshot.val()[key].lng,
+    //                 state: snapshot.val()[key].state,
+    //                 type: snapshot.val()[key].type,
+    //                 key:  key
+    //                 };
+    //      self.taixe.push(obj);   
+    //     });
+    // });
+    //   if (this.username === 'huyen' && this.password === '123') {
+    //   	localStorage.access_token = '1234567890';
+    //     this.$router.push('/taixe');
+    //   } else {
+    //   	alert('login failed');
+    //   }
     }
   }
 }

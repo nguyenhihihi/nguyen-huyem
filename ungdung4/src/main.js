@@ -6,6 +6,7 @@ import VueRouter from 'vue-router';
 
 import Login from './components/login.vue';
 import TaiXe from './components/taixe.vue';
+import DangKy from './components/register.vue';
 
 Vue.use(VueFire);
 
@@ -14,6 +15,7 @@ Vue.config.productionTip = false;
 var routes = [
     { path: '/', component: Login },
     { path: '/login', component: Login },
+    { path: '/register', component: DangKy},
     {
         path:'/taixe', component: TaiXe,
          meta: {
