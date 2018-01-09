@@ -7,7 +7,7 @@
 						<label for="txtSDT">Số điện thoại</label>
 					</div>
 					<div class="col-md-10 col-lg-10 col-sm-10 col-xs-10">
-						<input type="text" name="" id="txtSDT" v-model="SDT" v-on:change = "laySDT()"><br>
+						<input type="number" name="" id="txtSDT" v-model="SDT" v-on:change = "laySDT()"><br>
 					</div>
 				</div>
 				<br>
