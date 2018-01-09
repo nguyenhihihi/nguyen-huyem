@@ -113,27 +113,27 @@ export default {
       },
       timTaiXe(typeOfMoto ){
         var self = this;
-        console.log(self.ListDistance.length);
-        // for(var i =0;i <self.taixe.length;i++){
+        alert(self.ListDistance.length);
+        for(var i =0;i <self.taixe.length;i++){
 
-        //   if(self.ListDistance[i].distance>=1000)
-        //   {             
-        //     var ref = db.ref('reqDatXe/' + self.key);
-        //     ref.update({lat: self.lat, long: self.lng, tinhTrang: "da dinh vi"});
-        //     alert("Đã định vị nhưng chưa có xe đón");  
-        //     return;
-        //   }
-        //   if(self.taixe[self.ListDistance[i]["index"]].state ==0 && self.taixe[self.ListDistance[i]["index"]].type == typeOfMoto )
-        //   {
-        //     var ref = db.ref('reqDatXe/' + self.key);
-        //     ref.update({lat: self.lat, long: self.lng, tinhTrang: "da dinh vi", xeRuoc: self.taixe[ListDistance[i]["index"]].key });
-        //     var ref = db.ref('driver/' + self.taixe[self.ListDistance[i].index].key );
-        //     ref.update({state: 1});
-        //     alert("Có xe, thông tin của khách đã được gửi đến xe");
-        //     return;
-        //   }
-        // }
-        // alert("Không có xe");
+          if(self.ListDistance[i].distance>=1000)
+          {             
+            var ref = db.ref('reqDatXe/' + self.key);
+            ref.update({lat: self.lat, long: self.lng, tinhTrang: "da dinh vi"});
+            alert("Đã định vị nhưng chưa có xe đón");  
+            return;
+          }
+          if(self.taixe[self.ListDistance[i]["index"]].state ==0 && self.taixe[self.ListDistance[i]["index"]].type == typeOfMoto )
+          {
+            var ref = db.ref('reqDatXe/' + self.key);
+            ref.update({lat: self.lat, long: self.lng, tinhTrang: "da dinh vi", xeRuoc: self.taixe[ListDistance[i]["index"]].key });
+            var ref = db.ref('driver/' + self.taixe[self.ListDistance[i].index].key );
+            ref.update({state: 1});
+            alert("Có xe, thông tin của khách đã được gửi đến xe");
+            return;
+          }
+        }
+        alert("Không có xe");
       },
       ShowMarkerCluster(locations){
         var self = this;
@@ -158,24 +158,20 @@ export default {
         self.geocoder.geocode({ 'address': self.diem.diaChi }, function(results, status) {
         alert(self.diem.diaChi);
         if (status === 'OK') {
+          self.lat = parseFloat(results[0].geometry.location.lat().toFixed(6));
+          self.lng =  parseFloat(results[0].geometry.location.lng().toFixed(6));
+          self.map.setCenter(results[0].geometry.location);               
+          self.marker.setPosition(results[0].geometry.location);
+          self.marker.setMap(self.map);
           google.maps.event.addListener(self.marker, 'dragend', function (event) {
               self.marker.setPosition(event.latLng);             
               self.marker.setMap(self.map);
               var ref = db.ref('reqDatXe/' + self.key);
               ref.update({lat: event.latLng.lat(), long: event.latLng.lng()});
           });
-          self.lat = parseFloat(results[0].geometry.location.lat().toFixed(6));
-          self.lng =  parseFloat(results[0].geometry.location.lng().toFixed(6));
-          var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
-          self.marker = new google.maps.Marker(
-          {
-              position: {lat: self.lat, lng: rself.lng },
-              draggable: true,
-              icon:image,
-              animation: google.maps.Animation.DROP
 
-          });
-          self.marker.setMap(self.map);
+          // Bổ sung hàm revercoder
+
           alert("Đang tiến hành định vị");
           self.timDanhSachTaiXeGanNhat(typeOfMoto);
          
@@ -196,6 +192,7 @@ export default {
        {
         var self = this;
         var d = db.ref('reqDatXe/' + self.key);
+        d.update({tinhTrang: 'dang xu li'});
         d.on('value', function(snapshot){
           console.log(snapshot.val());
           self.diem = snapshot.val();
