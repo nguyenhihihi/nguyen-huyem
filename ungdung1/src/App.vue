@@ -26,8 +26,6 @@
   import ResultSearch from './components/ResultSearch.vue';
   import {req} from './firebase';
 
-//export const req = db.ref('/reqDatXe'); 
-
   export default {
     name: 'app',
 
