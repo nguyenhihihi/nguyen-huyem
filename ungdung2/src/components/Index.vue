@@ -1,7 +1,12 @@
 <template>
-  <div id="mapName">
-  	<button ype="button" class="btn btn btn-info" @click="initMap">Hiển thị bản đồ</button>
+  <div class="row">
+    <div class="col-sm-12  col-md-12 col-lg-12 col-xl-12">
+      <div id="mapName">
+        <button ype="button" class="btn btn btn-info" @click="initMap">Hiển thị bản đồ</button>
+      </div>
+    </div>
   </div>
+  
 </template>
 <script type="text/javascript">
 
@@ -14,7 +19,7 @@ export default {
 		}
 	},
 	mounted: function () {
-		
+		this.initMap();
 	},
 	methods:{
     initMap(){
@@ -30,8 +35,8 @@ export default {
 </script>
 <style scoped>
 #mapName {
-  width: 800px;
-  height: 600px;
+  width: 970px;
+  height: 650px;
   margin: 0 auto;
   background: powderblue;
 }
