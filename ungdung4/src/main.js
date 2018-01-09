@@ -10,6 +10,7 @@ import DangKy from './components/register.vue';
 import YeuCauChoXacNhan from './components/YeuCauChoXacNhan.vue';
 import Depart from './components/Depart.vue';
 import KetThucChuyenDi from './components/KetThucChuyenDi.vue';
+import ThongTinTaiXe from './components/ThongTinTaiXe.vue';
 
 Vue.use(VueFire);
 
@@ -42,7 +43,13 @@ var routes = [
          meta: {
           requiresAuth: true
         }
-    }
+    },
+     {
+        path:'/thongtin', component: ThongTinTaiXe,
+         meta: {
+          requiresAuth: true
+        }
+      },
 
 ];
 

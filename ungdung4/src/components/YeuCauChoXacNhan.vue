@@ -1,14 +1,16 @@
 <template>
 	<div class="panel panel-default">
 	<div class="panel-heading">
-		<h2 class="panel-title"><b>{{title}}</b></h2>
+		<h2 class="panel-title"><b>{{title}}</b><div style="text-align: right;">
+			<router-link :to = "'/thongtin'" type="button" class="btn btn-default"> <span class="glyphicon glyphicon-user"></span>
+								</router-link>
+		</div></h2>
 	</div>
 	<div class="panel-body">
 		<div class="row">
 			<div class="col-sm-3 col-md-3 col-xl-3 col-lg-3"></div>
 			<div class="col-sm-6 col-md-6 col-xl-6 col-lg-6">
-				<div v-if = "req != null">
-					
+				<div v-if = "req != null">					
 					<b>SĐT:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </b><b><i>{{req.sdt}}</i></b><br/>
 					<b>Địa chỉ: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>{{req.diaChi}} &nbsp;&nbsp;&nbsp;<br/>
 					<b>Ghi chú:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;</b>{{req.ghiChu}}<br/>
@@ -27,7 +29,7 @@
 						
 					</div>
 					
-					<!-- them key vao cho nay -->
+					
 					
 					</div>
 					<div v-else>
@@ -67,10 +69,10 @@
 			huy(){
 				var self = this;
 				var xeruoc = self.req.xeRuoc + 'bihuy';
-				alert(self.keypoint);
+				
 
 				var ref = db.ref('reqDatXe/' + self.keypoint);
-				ref.update({xeRuoc: "", tinhTrang: 'chua dinh vi'});
+				ref.update({tinhTrang: 'chua dinh vi'});
 				self.req = null;
 			},
 			LayData(key){
