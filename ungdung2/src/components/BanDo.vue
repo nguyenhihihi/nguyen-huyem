@@ -1,6 +1,9 @@
 <template>
-  <div class="google-map" id="mapName">
-    
+  <div class="row">
+    <div class="col-sm-12  col-md-12 col-lg-12 col-xl-12">
+      <div class="google-map" id="mapName">
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -123,7 +126,7 @@ export default {
       },
       timTaiXe(typeOfMoto ){
         var self = this;
-        alert(self.ListDistance.length);
+        
         for(var i =0;i <self.taixe.length;i++){
 
           if(self.ListDistance[i].distance>=1000)
@@ -135,9 +138,10 @@ export default {
           }
           if(self.taixe[self.ListDistance[i]["index"]].state ==0 && self.taixe[self.ListDistance[i]["index"]].type == typeOfMoto )
           {
+            alert("Hàm nào vậy2");
             var ref = db.ref('reqDatXe/' + self.key);
-            ref.update({lat: self.lat, long: self.lng, tinhTrang: "da dinh vi", xeRuoc: self.taixe[ListDistance[i]["index"]].key });
-            var ref = db.ref('driver/' + self.taixe[self.ListDistance[i].index].key );
+            ref.update({lat: self.lat, long: self.lng, tinhTrang: "da dinh vi", xeRuoc: self.taixe[self.ListDistance[i]["index"]].key });
+            var ref = db.ref('driver/' + self.taixe[self.ListDistance[i]["index"]].key );
             ref.update({state: 1});
             alert("Có xe, thông tin của khách đã được gửi đến xe");
             return;
@@ -149,6 +153,7 @@ export default {
         var self = this;
         var labels = 'ABCDEFGHIJ';
         self.map.setZoom(10);
+        self.map.setCenter({lat: self.lat, lng:self.lng});
         if(self.markers.length >0)
         {
          self.markerCluster.clearMarkers();
@@ -253,7 +258,7 @@ export default {
            }
             });
         });
-        if(self.diem!=null)
+        if(self.diem != null)
         {
           if(self.diem.loaiXe =="Xe Premium"){
             self.dinhvi(1);
@@ -269,9 +274,9 @@ export default {
 </script>
 <style scoped>
 .google-map {
-  width: 800px;
-  height: 600px;
+  width: 970px;
+  height: 650px;
   margin: 0 auto;
-  background: gray;
+  background: powderblue;
 }
 </style>
