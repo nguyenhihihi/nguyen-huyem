@@ -2,7 +2,10 @@
 
 <div class="panel panel-default">
 	<div class="panel-heading">
-		<h2 class="panel-title"><b>{{title}}</b></h2>
+		<h2 class="panel-title"><b>{{title}}</b><div style="text-align: right;">
+			<router-link :to = "'/thongtin'" type="button" class="btn btn-default"> <span class="glyphicon glyphicon-user"></span>
+								</router-link>
+		</div></h2>
 	</div>
 	<div class="panel-body">
 		<div class="row">
@@ -23,16 +26,7 @@
 		</div>
 	</div>
 </div>
-<!-- 	<div>
-		{{req}}
-		<button id = 'btnBatDau' style="display: block;" @click = 
-		"batdau">Bat dau</button>
-		<div id='router' style="display: none;">
-		<router-link :key = "key" :to = "'/finish/' + key" type="button" class="btn btn-block btn-primary">
-			Hoàn tất
-		</router-link>
-	</div>
-	</div> -->
+
 </template>
 
 <script>
@@ -139,23 +133,6 @@
           google.maps.event.addListener(map, 'click', function(event) {
           	var ref = db.ref('driver/' + self.keytaixe);
           	ref.update({lat: event.latLng.lat(), lng:  event.latLng.lng()});
-          //	alert(event.latLng.lat() + ' va ' + event.latLng.lng());
-	        		//setMapOnAll(null);
-	    //     		if (self.daco == 1)
-	    //     		{
-	    //     			// var ll =  new google.LatLng(event.latLng.lat(), event.latLng.lng());
-	    //     			self.marker.setPosition(event.latLng);
-	    //     			self.lat = event.latLng.lat();
-					//  self.lng = event.latLng.lng();
-	    //     			return;
-	    //     		}
-	    //     		//rong.setMap(map);
-					// self.marker = new google.maps.Marker({position: event.latLng, map: map});
-					 
-					//  console.log(event.latLng.lat() + event.latLng.lng());
-					//  self.lat = event.latLng.lat();
-					//  self.lng = event.latLng.lng();
-					//  self.daco = 1;
 
 				});
       },

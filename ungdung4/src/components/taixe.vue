@@ -1,8 +1,12 @@
 <template>
 	<div class="panel panel-default">
 	<div class="panel-heading">
-		<h2 class="panel-title"><b>{{title}}</b></h2>
+		<h2 class="panel-title"><b>{{title}}</b><div style="text-align: right;">
+			<router-link :to = "'/thongtin'" type="button" class="btn btn-default"> <span class="glyphicon glyphicon-user"></span>
+								</router-link>
+		</div></h2>
 		&nbsp;&nbsp;&nbsp; lat:{{lat}}&nbsp;&nbsp;&nbsp; lng:{{lng}}
+
 	</div>
 	<div class="panel-body">
 		<div class="containermap">
@@ -39,8 +43,8 @@ export default {
   },
 
   mounted(){
-  	//console.log('key cua tai xe');
-  	console.log(localStorage.key);
+  	
+  	
   	this.luukey();
   	this.initMap();
   },

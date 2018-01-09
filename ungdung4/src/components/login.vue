@@ -77,14 +77,14 @@ export default {
        {
 
           self.taixe = tem;
-         // alert('Đăng nhập thành không.');
+         
         window.keytaixe = keys;
         console.log("key gl:" + window.keytaixe);
           localStorage.key= keys;
           localStorage.access_token= '1234567890';
           console.log(kq);
           kq = true;
-          // this.quatrang();
+          
         } 
         else
         {
@@ -118,37 +118,12 @@ export default {
 
      if (kq == true)
      {
-      //set trang thai da dang nhap, dang ranh vao he thong
+      
       var ref = db.ref('driver/' + keys);
       ref.update({state: 0});
       //router qua trang khac
       this.$router.push('/taixe');
      }
-
-
-      
-      // console
-      // this.$router.push('/taixe');
-    // driver.on('value', function(snapshot){
-    //   if(self.taixe.length>0)
-    //     self.taixe.splice(0);
-    //   Object.keys(snapshot.val()).forEach(function(key){
-    //     var obj = {
-    //                 lat: snapshot.val()[key].lat,
-    //                 lng: snapshot.val()[key].lng,
-    //                 state: snapshot.val()[key].state,
-    //                 type: snapshot.val()[key].type,
-    //                 key:  key
-    //                 };
-    //      self.taixe.push(obj);   
-    //     });
-    // });
-    //   if (this.username === 'huyen' && this.password === '123') {
-    //   	localStorage.access_token = '1234567890';
-    //     this.$router.push('/taixe');
-    //   } else {
-    //   	alert('login failed');
-    //   }
     },
           sleep2(milliseconds) {
             var start = new Date().getTime();
@@ -159,9 +134,7 @@ export default {
         }
       },
 
-    // quatrang(){
-    //   // this.$router.push('/taixe');
-    // }
+
   }
 }
 </script>
