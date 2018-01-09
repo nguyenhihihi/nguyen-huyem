@@ -21,7 +21,7 @@
 						Đăng nhập
 					</button>
           <router-link :to = "'/register'" type="button" class="btn btn-block btn-primary">
-            <span class="glyphicon glyphicon-user"></span>
+            <span class="glyphicon glyphicon-plus"></span>
             Đăng ký
           </router-link>
 				</form>
@@ -34,6 +34,7 @@
 
 <script>
 import {Driver} from '../firebase';
+import {db} from '../firebase';
 export default {
 
   name: 'Login',
@@ -53,6 +54,7 @@ export default {
       var self = this;
       var us = self.username;
       var ps = self.password;
+      var keys;
 
       var kq= false;
 
@@ -65,8 +67,7 @@ export default {
       if (snapshot.val() != null){
        // self.taixe = snapshot.val();
        var tem;
-       var keys;
-       Object.keys(snapshot.val()).forEach(function(key){
+              Object.keys(snapshot.val()).forEach(function(key){
          tem = snapshot.val()[key];
          keys = key;
       });
@@ -117,6 +118,9 @@ export default {
      if (kq == true)
      {
       //set trang thai da dang nhap, dang ranh vao he thong
+      var ref = db.ref('driver/' + keys);
+      ref.update({state: 0});
+      //router qua trang khac
       this.$router.push('/taixe');
      }
 

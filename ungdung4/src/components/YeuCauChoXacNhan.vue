@@ -3,10 +3,11 @@
 		<div v-if = "req != null">
 		{{key}}
 		{{req}}
+		{{keypoint}}
 		<button @click = "dismiss">Hủy</button>
 		<!-- them key vao cho nay -->
-		<router-link :key = "req.sdt" :to = "'/depart/'" type="button" class="btn btn-block btn-primary">
-			</router-link>
+		<router-link :key = "keypoint" :to = "'/depart/' + keypoint" type="button" class="btn btn-block btn-primary">Nhận xe
+		</router-link>
 		</div>
 		<div v-else>
 			không có yêu cầu
@@ -23,7 +24,8 @@
 		data(){
 			return {
 				key: "",
-				req: null
+				req: null,
+				keypoint: "",
 			}
 		},
 
@@ -39,8 +41,8 @@
 				var self = this;
 				var xeruoc = self.req.xeRuoc + 'bihuy';
 
-				var ref = db.ref('reqDatXe/' + self.key);
-				ref.update({xeRuoc: xeruoc});
+				var ref = db.ref('reqDatXe/' + self.keypoint);
+				ref.update({xeRuoc: xeruoc, tinhTrang: 'chua dinh vi'});
 			},
 			LayData(key){
 				var self = this;
@@ -58,6 +60,7 @@
 							if (snapshot.val()[key].tinhTrang == 'da dinh vi' && snapshot.val()[key].xeRuoc == self.key)
 							{
 								self.req = snapshot.val()[key];
+								self.keypoint = key;
 							}
 						});
 					}
