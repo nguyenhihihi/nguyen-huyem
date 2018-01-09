@@ -5,8 +5,7 @@
                 </router-link> 
 		<h1>Đây là bản đồ: {{key}}</h1>
 		<div id = "map">
-			<!-- XE: {{xe}}<br/> -->
-			<!-- Khach: {{khach}}<br/> -->
+		
 		</div>
 
 	</div>
@@ -37,9 +36,7 @@ export default{
 
 		var key = this.$route.params.key;
 		this.luuid(key);
-		//this.dieuChinhDuLieu();
-		//this.timKhach();
-		//this.timXe();
+		
 		this.XuLyData();
 
 		
@@ -59,11 +56,10 @@ export default{
 				 var kq2 = db.ref('driver/'+ keyXeRuoc);
 				kq2.on('value', function(snapshot2){
 				taixe = snapshot2.val();
+				console.log('tai xe va dat xe');
 				console.log(datxe);
 				console.log(taixe);
 				self.initMap(taixe.lat, taixe.lng, datxe.lat, datxe.long)
-
-				//init map
 
 			});
 			});
