@@ -1,9 +1,10 @@
 <template>
   <div id="mapName">
-  	<button @click="initMap">hiển thị bản đồ</button>
+  	<button ype="button" class="btn btn btn-info" @click="initMap">Hiển thị bản đồ</button>
   </div>
 </template>
 <script type="text/javascript">
+
 export default {
 	name: 'google-map',
 	data: function () {
@@ -32,6 +33,6 @@ export default {
   width: 800px;
   height: 600px;
   margin: 0 auto;
-  background: gray;
+  background: powderblue;
 }
 </style>
