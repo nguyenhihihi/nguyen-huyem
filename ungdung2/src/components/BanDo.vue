@@ -1,5 +1,7 @@
 <template>
-  <div class="google-map" id="mapName"></div>
+  <div class="google-map" id="mapName">
+    
+  </div>
 </template>
 <script>
 import  {db} from '../firebase';
@@ -57,7 +59,7 @@ export default {
             position: {lat: 10.756, lng: 106.644 },
             draggable: true,
             icon:image,
-              animation: google.maps.Animation.DROP
+            animation: google.maps.Animation.DROP
 
         });
       },
@@ -95,9 +97,14 @@ export default {
         console.log(self.ListDistance);
         if(self.ListOf10Driver.length>0)
           self.ListOf10Driver.splice(0);
-        if(self.ListDistance.length>0){
-          //Sửa 2->10
-          for(var i =0;i<2;i++)
+        if(self.ListDistance.length>0 && self.taixe.length > 10){
+          for(var i =0;i<10;i++)
+          {
+            self.ListOf10Driver.push(self.taixe[self.ListDistance[i]["index"]]);
+          }
+        }
+        else if( self.ListDistance.length>0 && self.taixe.length < 10){
+          for(var i =0;i<self.taixe.length;i++)
           {
             self.ListOf10Driver.push(self.taixe[self.ListDistance[i]["index"]]);
           }
@@ -106,26 +113,27 @@ export default {
       },
       timTaiXe(typeOfMoto ){
         var self = this;
-        for(var i =0;i <self.taixe.length;i++){
+        console.log(self.ListDistance.length);
+        // for(var i =0;i <self.taixe.length;i++){
 
-          if(self.ListDistance[i].distance>=1000)
-          {             
-            var ref = db.ref('reqDatXe/' + self.key);
-            ref.update({lat: self.lat, long: self.lng, tinhTrang: "da dinh vi"});
-            alert("Đã định vị nhưng không có xe đón");  
-            return;
-          }
-          if(self.taixe[self.ListDistance[i]["index"]].state ==0 && self.taixe[self.ListDistance[i]["index"]].type == typeOfMoto )
-          {
-            var ref = db.ref('reqDatXe/' + self.key);
-            ref.update({lat: self.lat, long: self.lng, tinhTrang: "da dinh vi", xeRuoc: self.taixe[ListDistance[i]["index"]].key });
-            var ref = db.ref('driver/' + self.taixe[self.ListDistance[i].index].key );
-            ref.update({state: 1});
-            alert("Có xe, thông tin của khách đã được gửi đến xe");
-            return;
-          }
-        }
-        alert("Không có xe");
+        //   if(self.ListDistance[i].distance>=1000)
+        //   {             
+        //     var ref = db.ref('reqDatXe/' + self.key);
+        //     ref.update({lat: self.lat, long: self.lng, tinhTrang: "da dinh vi"});
+        //     alert("Đã định vị nhưng chưa có xe đón");  
+        //     return;
+        //   }
+        //   if(self.taixe[self.ListDistance[i]["index"]].state ==0 && self.taixe[self.ListDistance[i]["index"]].type == typeOfMoto )
+        //   {
+        //     var ref = db.ref('reqDatXe/' + self.key);
+        //     ref.update({lat: self.lat, long: self.lng, tinhTrang: "da dinh vi", xeRuoc: self.taixe[ListDistance[i]["index"]].key });
+        //     var ref = db.ref('driver/' + self.taixe[self.ListDistance[i].index].key );
+        //     ref.update({state: 1});
+        //     alert("Có xe, thông tin của khách đã được gửi đến xe");
+        //     return;
+        //   }
+        // }
+        // alert("Không có xe");
       },
       ShowMarkerCluster(locations){
         var self = this;
@@ -141,8 +149,6 @@ export default {
             label: labels[i % labels.length]
           });
         });
-
-        // Add a marker clusterer to manage the markers.
         self.markerCluster = new MarkerClusterer(self.map, self.markers,
             {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
         return true;
@@ -160,15 +166,21 @@ export default {
           });
           self.lat = parseFloat(results[0].geometry.location.lat().toFixed(6));
           self.lng =  parseFloat(results[0].geometry.location.lng().toFixed(6));
-          self.map.setCenter(results[0].geometry.location);               
-          self.marker.setPosition(results[0].geometry.location);
+          var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+          self.marker = new google.maps.Marker(
+          {
+              position: {lat: self.lat, lng: rself.lng },
+              draggable: true,
+              icon:image,
+              animation: google.maps.Animation.DROP
+
+          });
           self.marker.setMap(self.map);
           alert("Đang tiến hành định vị");
           self.timDanhSachTaiXeGanNhat(typeOfMoto);
          
           var all   = $.when(self.ShowMarkerCluster(self.ListOf10Driver));
           all.done(function () {
-            alert("oko ok");
             self.timTaiXe(typeOfMoto);
           });
         } else {
@@ -195,6 +207,7 @@ export default {
           if(self.taixe.length>0)
             self.taixe.splice(0);
           Object.keys(snapshot.val()).forEach(function(key){
+            if(snapshot.val()[key].state!=2){
             var obj = {
                         lat: snapshot.val()[key].lat,
                         lng: snapshot.val()[key].lng,
@@ -202,7 +215,8 @@ export default {
                         type: snapshot.val()[key].type,
                         key:  key
                         };
-             self.taixe.push(obj);   
+             self.taixe.push(obj);
+           }
             });
         });
         if(self.diem!=null)
