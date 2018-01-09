@@ -1,5 +1,7 @@
 <template>
-  <div class="google-map" id="mapName"></div>
+  <div class="google-map" id="mapName">
+    
+  </div>
 </template>
 <script>
 import  {db} from '../firebase';
@@ -22,8 +24,9 @@ export default {
       lng: null,
       geocoder: new google.maps.Geocoder(),
       reverse: new google.maps.Geocoder(),
-      infowindow: new google.maps.InfoWindow
-      
+      infowindow: new google.maps.InfoWindow,
+      reverse: new google.maps.Geocoder(),
+      mark: null,
     }
   },
   mounted: function () {
@@ -57,7 +60,7 @@ export default {
             position: {lat: 10.756, lng: 106.644 },
             draggable: true,
             icon:image,
-              animation: google.maps.Animation.DROP
+            animation: google.maps.Animation.DROP
 
         });
       },
@@ -95,9 +98,14 @@ export default {
         console.log(self.ListDistance);
         if(self.ListOf10Driver.length>0)
           self.ListOf10Driver.splice(0);
-        if(self.ListDistance.length>0){
-          //Sửa 2->10
-          for(var i =0;i<2;i++)
+        if(self.ListDistance.length>0 && self.taixe.length > 10){
+          for(var i =0;i<10;i++)
+          {
+            self.ListOf10Driver.push(self.taixe[self.ListDistance[i]["index"]]);
+          }
+        }
+        else if( self.ListDistance.length>0 && self.taixe.length < 10){
+          for(var i =0;i<self.taixe.length;i++)
           {
             self.ListOf10Driver.push(self.taixe[self.ListDistance[i]["index"]]);
           }
@@ -106,13 +114,14 @@ export default {
       },
       timTaiXe(typeOfMoto ){
         var self = this;
+        alert(self.ListDistance.length);
         for(var i =0;i <self.taixe.length;i++){
 
           if(self.ListDistance[i].distance>=1000)
           {             
             var ref = db.ref('reqDatXe/' + self.key);
             ref.update({lat: self.lat, long: self.lng, tinhTrang: "da dinh vi"});
-            alert("Đã định vị nhưng không có xe đón");  
+            alert("Đã định vị nhưng chưa có xe đón");  
             return;
           }
           if(self.taixe[self.ListDistance[i]["index"]].state ==0 && self.taixe[self.ListDistance[i]["index"]].type == typeOfMoto )
@@ -130,7 +139,7 @@ export default {
       ShowMarkerCluster(locations){
         var self = this;
         var labels = 'ABCDEFGHIJ';
-        
+        self.map.setZoom(8);
         if(self.markers.length >0)
         {
          self.markerCluster.clearMarkers();
@@ -141,8 +150,6 @@ export default {
             label: labels[i % labels.length]
           });
         });
-
-        // Add a marker clusterer to manage the markers.
         self.markerCluster = new MarkerClusterer(self.map, self.markers,
             {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
         return true;
@@ -152,23 +159,52 @@ export default {
         self.geocoder.geocode({ 'address': self.diem.diaChi }, function(results, status) {
         alert(self.diem.diaChi);
         if (status === 'OK') {
+          self.lat = parseFloat(results[0].geometry.location.lat().toFixed(6));
+          self.lng =  parseFloat(results[0].geometry.location.lng().toFixed(6));
+          self.map.setCenter(results[0].geometry.location);               
+          self.marker.setPosition(results[0].geometry.location);
+          self.marker.setMap(self.map);
+
+          /*** HÀM DRAG ĐIỂM VÀ XÁC ĐỊNH LẠI TỌA ĐỘ ***/
           google.maps.event.addListener(self.marker, 'dragend', function (event) {
               self.marker.setPosition(event.latLng);             
               self.marker.setMap(self.map);
               var ref = db.ref('reqDatXe/' + self.key);
               ref.update({lat: event.latLng.lat(), long: event.latLng.lng()});
           });
-          self.lat = parseFloat(results[0].geometry.location.lat().toFixed(6));
-          self.lng =  parseFloat(results[0].geometry.location.lng().toFixed(6));
-          self.map.setCenter(results[0].geometry.location);               
-          self.marker.setPosition(results[0].geometry.location);
-          self.marker.setMap(self.map);
+
+          // Bổ sung hàm revercoder
+          google.maps.event.addListener(self.map, 'click', function(event) {
+            self.reverse.geocode({'location': event.latLng }, function(results, status) {
+            if (status === 'OK') {
+                if (results[0]) {
+                  if(self.mark!=null)
+                  {
+                    self.infowindow.close();
+                    self.mark.setMap(null);
+                  }
+                    self.map.setZoom(8);
+                  self.mark = new google.maps.Marker(
+                    {
+                        position: { lat: 10.762622, lng: 106.65665 }
+                    });
+                    self.mark.setPosition(event.latLng);
+                    self.mark.setMap(self.map);
+                    self.infowindow.setContent(results[0].formatted_address);
+                    self.infowindow.open(self.map, self.mark);
+                } else {
+                    window.alert('không tìm thấy');
+                }
+            } else {
+                window.alert('Không tìm thấy: ' + status);
+            }
+            });
+          });
           alert("Đang tiến hành định vị");
           self.timDanhSachTaiXeGanNhat(typeOfMoto);
          
           var all   = $.when(self.ShowMarkerCluster(self.ListOf10Driver));
           all.done(function () {
-            alert("oko ok");
             self.timTaiXe(typeOfMoto);
           });
         } else {
@@ -184,6 +220,7 @@ export default {
        {
         var self = this;
         var d = db.ref('reqDatXe/' + self.key);
+        d.update({tinhTrang: 'dang xu li'});
         d.on('value', function(snapshot){
           console.log(snapshot.val());
           self.diem = snapshot.val();
@@ -195,6 +232,7 @@ export default {
           if(self.taixe.length>0)
             self.taixe.splice(0);
           Object.keys(snapshot.val()).forEach(function(key){
+            if(snapshot.val()[key].state!=2){
             var obj = {
                         lat: snapshot.val()[key].lat,
                         lng: snapshot.val()[key].lng,
@@ -202,7 +240,8 @@ export default {
                         type: snapshot.val()[key].type,
                         key:  key
                         };
-             self.taixe.push(obj);   
+             self.taixe.push(obj);
+           }
             });
         });
         if(self.diem!=null)

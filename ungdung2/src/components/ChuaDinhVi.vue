@@ -1,6 +1,6 @@
 <template>
 <div class="col-md-12 col-lg-12 col-xs-12 col-sm-10 col-lg-12">
-		<h4>DANH SÁCH YÊU CẦU CHƯA ĐỊNH VỊ</h4>
+		<h3>DANH SÁCH YÊU CẦU CHƯA ĐỊNH VỊ</h3>
 		<table id='tabKetQua' class='table table-hover table2'>
 			<thead>
 				<tr> 

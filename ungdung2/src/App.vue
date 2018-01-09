@@ -2,8 +2,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-9">
-        <router-view>
-          
+        <router-view>          
         </router-view>
       </div>
        <div class="col-md-3">
