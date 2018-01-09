@@ -24,8 +24,9 @@ export default {
       lng: null,
       geocoder: new google.maps.Geocoder(),
       reverse: new google.maps.Geocoder(),
-      infowindow: new google.maps.InfoWindow
-      
+      infowindow: new google.maps.InfoWindow,
+      reverse: new google.maps.Geocoder(),
+      mark: null,
     }
   },
   mounted: function () {
@@ -138,7 +139,7 @@ export default {
       ShowMarkerCluster(locations){
         var self = this;
         var labels = 'ABCDEFGHIJ';
-        
+        self.map.setZoom(8);
         if(self.markers.length >0)
         {
          self.markerCluster.clearMarkers();
@@ -163,6 +164,8 @@ export default {
           self.map.setCenter(results[0].geometry.location);               
           self.marker.setPosition(results[0].geometry.location);
           self.marker.setMap(self.map);
+
+          /*** HÀM DRAG ĐIỂM VÀ XÁC ĐỊNH LẠI TỌA ĐỘ ***/
           google.maps.event.addListener(self.marker, 'dragend', function (event) {
               self.marker.setPosition(event.latLng);             
               self.marker.setMap(self.map);
@@ -171,7 +174,32 @@ export default {
           });
 
           // Bổ sung hàm revercoder
-
+          google.maps.event.addListener(self.map, 'click', function(event) {
+            self.reverse.geocode({'location': event.latLng }, function(results, status) {
+            if (status === 'OK') {
+                if (results[0]) {
+                  if(self.mark!=null)
+                  {
+                    self.infowindow.close();
+                    self.mark.setMap(null);
+                  }
+                    self.map.setZoom(8);
+                  self.mark = new google.maps.Marker(
+                    {
+                        position: { lat: 10.762622, lng: 106.65665 }
+                    });
+                    self.mark.setPosition(event.latLng);
+                    self.mark.setMap(self.map);
+                    self.infowindow.setContent(results[0].formatted_address);
+                    self.infowindow.open(self.map, self.mark);
+                } else {
+                    window.alert('không tìm thấy');
+                }
+            } else {
+                window.alert('Không tìm thấy: ' + status);
+            }
+            });
+          });
           alert("Đang tiến hành định vị");
           self.timDanhSachTaiXeGanNhat(typeOfMoto);
          
