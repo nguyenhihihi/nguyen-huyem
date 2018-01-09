@@ -1,5 +1,5 @@
 <template>
-  <div class="google-map" :id="mapName"></div>
+  <div class="google-map" id="mapName"></div>
 </template>
 <script>
 import  {db} from '../firebase';
@@ -9,7 +9,7 @@ export default {
   props: ['name'],
   data: function () {
     return {
-      mapName: this.name + "-map",
+      mapName: "-map",
       ListDistance:[],
       ListOf10Driver:[],
       map: null,
@@ -27,6 +27,9 @@ export default {
     }
   },
   mounted: function () {
+    this.ListDistance =[];
+    this.taixe =[];
+    this.ListOf10Driver=[];
     this.initMap();
     var key = this.$route.params.key;
     this.luuid(key);
@@ -42,9 +45,9 @@ export default {
     },
     methods:{
       initMap(){
-        const element = document.getElementById(this.mapName)
+        const element = document.getElementById("mapName");
         const options = {
-          zoom: 14,
+          zoom:8,
           center: new google.maps.LatLng(10.756,106.644)
         }
         this.map = new google.maps.Map(element, options);
@@ -68,7 +71,7 @@ export default {
 
       // Tính khoảng cách 2 điểm
       getDistanc(mainpointlat, mainpointlng, p2) {
-        var self = this;
+         var self = this;
         var R = 6378137; // Earth’s mean radius in meter
         var dLat = self.rad(p2.lat - mainpointlat);
         var dLong = self.rad(p2.lng - mainpointlng);
@@ -93,9 +96,10 @@ export default {
         if(self.ListOf10Driver.length>0)
           self.ListOf10Driver.splice(0);
         if(self.ListDistance.length>0){
-          for(var i =0;i<10;i++)
+          //Sửa 2->10
+          for(var i =0;i<2;i++)
           {
-            self.ListOf10Driver.push(self.taixe[self.ListDistance[i].index]);
+            self.ListOf10Driver.push(self.taixe[self.ListDistance[i]["index"]]);
           }
         }
         
@@ -111,10 +115,10 @@ export default {
             alert("Đã định vị nhưng không có xe đón");  
             return;
           }
-          if(self.taixe[self.ListDistance[i].index].state ==0 && self.taixe[self.ListDistance[i].index].type == typeOfMoto )
+          if(self.taixe[self.ListDistance[i]["index"]].state ==0 && self.taixe[self.ListDistance[i]["index"]].type == typeOfMoto )
           {
             var ref = db.ref('reqDatXe/' + self.key);
-            ref.update({lat: self.lat, long: self.lng, tinhTrang: "da co xe nhan", xeRuoc: self.taixe[ListDistance[i].index].key });
+            ref.update({lat: self.lat, long: self.lng, tinhTrang: "da dinh vi", xeRuoc: self.taixe[ListDistance[i]["index"]].key });
             var ref = db.ref('driver/' + self.taixe[self.ListDistance[i].index].key );
             ref.update({state: 1});
             alert("Có xe, thông tin của khách đã được gửi đến xe");
@@ -124,7 +128,6 @@ export default {
         alert("Không có xe");
       },
       ShowMarkerCluster(locations){
-        const bounds = new google.maps.LatLngBounds();
         var self = this;
         var labels = 'ABCDEFGHIJ';
         
@@ -149,6 +152,12 @@ export default {
         self.geocoder.geocode({ 'address': self.diem.diaChi }, function(results, status) {
         alert(self.diem.diaChi);
         if (status === 'OK') {
+          google.maps.event.addListener(self.marker, 'dragend', function (event) {
+              self.marker.setPosition(event.latLng);             
+              self.marker.setMap(self.map);
+              var ref = db.ref('reqDatXe/' + self.key);
+              ref.update({lat: event.latLng.lat(), long: event.latLng.lng()});
+          });
           self.lat = parseFloat(results[0].geometry.location.lat().toFixed(6));
           self.lng =  parseFloat(results[0].geometry.location.lng().toFixed(6));
           self.map.setCenter(results[0].geometry.location);               
@@ -156,14 +165,16 @@ export default {
           self.marker.setMap(self.map);
           alert("Đang tiến hành định vị");
           self.timDanhSachTaiXeGanNhat(typeOfMoto);
-          var check = false;
-          check = self.ShowMarkerCluster(self.ListOf10Driver);
-          if(check ==true):
-            {
-              self.timTaiXe(typeOfMoto);
-            }
+         
+          var all   = $.when(self.ShowMarkerCluster(self.ListOf10Driver));
+          all.done(function () {
+            alert("oko ok");
+            self.timTaiXe(typeOfMoto);
+          });
         } else {
           alert('không tìm thấy:  ' + status);
+          var ref = db.ref('reqDatXe/' + self.key);
+            ref.update({tinhTrang: "da dinh vi" });
           self.initMap();
           return;
         }
