@@ -38,12 +38,12 @@
 		 mounted()
         {
             var self = this;
-            self.dsDaDinhVi = self.dsDaDinhVi.reverse(); 
+          	self.dsDaDinhVi = self.dsDaDinhVi.reverse(); 
 
         }
      }
 </script>
-<style>
+
 	
 	
 <style>
@@ -54,5 +54,4 @@
         white-space: nowrap;
         height: 50px;
     }
-</style>
 </style>

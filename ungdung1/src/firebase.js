@@ -12,4 +12,3 @@ const app = initializeApp({
 export const db = app.database();
 export const req = db.ref('/reqDatXe'); 
 
-//export const history = db.ref('/reqDatXe').orderByChild('sdt');

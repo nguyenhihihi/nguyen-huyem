@@ -48,36 +48,3 @@ import {DsDaCoXeNhan} from '../firebase';
         }
 	}
 </script>
-
-<style>
- /*   body{
-  background-color: #bdc3c7;
-}*/
-/*.table-fixed{
-  width: 100%;
-  background-color: #f3f3f3;
-  tbody{
-    height:10px;
-    overflow-y:scroll;
-    width: 100%;
-    }
-  thead,tbody,tr,td,th{
-    display:block;
-  }
-  tbody{
-    td{
-      float:left;
-    }
-  }
-  thead {
-    tr{
-      th{
-        float:left;
-       background-color: #f39c12;
-       border-color:#e67e22;
-      }
-    }
-  }
-}*/
-
-</style>

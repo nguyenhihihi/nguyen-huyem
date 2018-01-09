@@ -7,7 +7,7 @@
 			<div class="col-md-10 col-lg-10 col-sm-10 col-xs-10">			<h1>TÌM KIẾM THÔNG TIN</h1>
 				<div id="Search">
 				<label for="txtsearch">Số điên thoại: </label>
-				<input type="" name="" id="txtsearch">
+				<input type="number" name="" id="txtsearch">
 				<button id="btnSearch" type="button" class="btn btn-primary" @click = "search()">Tìm kiếm</button>
 			</div>
 			<br><br>
