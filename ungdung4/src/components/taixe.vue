@@ -8,7 +8,7 @@
 	</div>
 </template>
 <script>
-import {Driver} from '../firebase';
+import {db} from '../firebase';
 export default {
 
   name: 'Login',
@@ -25,6 +25,8 @@ export default {
   },
 
   mounted(){
+  	//console.log('key cua tai xe');
+  	console.log(localStorage.key);
   	this.luukey();
   	this.initMap();
   },
@@ -73,9 +75,11 @@ export default {
 	submit(){
 		var self = this;
 		//update lat long 
+		var ref = db.ref('driver/' + self.key);
 
+		ref.update({lat: self.lat, lng:self.lng})
 		//route toi page don khach
-		this.$router.push('/taixe');
+		this.$router.push('/request');
 	},
 	luukey()
 	{

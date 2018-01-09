@@ -76,6 +76,8 @@ export default {
 
           self.taixe = tem;
          // alert('Đăng nhập thành không.');
+        window.keytaixe = keys;
+        console.log("key gl:" + window.keytaixe);
           localStorage.key= keys;
           localStorage.access_token= '1234567890';
           console.log(kq);
