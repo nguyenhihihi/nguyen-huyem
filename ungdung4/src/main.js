@@ -32,13 +32,13 @@ var routes = [
         }
     },
       {
-        path:'/depart', component: Depart,
+        path:'/depart/:xe', component: Depart,
          meta: {
           requiresAuth: true
         }
     },
       {
-        path:'/finish', component: KetThucChuyenDi,
+        path:'/finish/:xe', component: KetThucChuyenDi,
          meta: {
           requiresAuth: true
         }

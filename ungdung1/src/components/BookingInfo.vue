@@ -87,6 +87,10 @@
 							tinhTrang: "chua dinh vi",
 							xeRuoc: ""
 						});
+
+						$('#txtSDT').val("");
+						$('#txtDiaChi').val("");
+						$('#txtGhiChu').val("");
 					},
 
 					laySDT()

@@ -68,6 +68,8 @@
         self.dsTimKiem = [];
         var sl= self.dsLS.length;
         var i = 0;
+        console.log(self.dsLS.length);
+        console.log(sl);
         for (i; i < sl; i++)
         {
            if (self.dsLS[i].sdt == sdt)

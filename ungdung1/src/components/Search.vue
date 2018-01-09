@@ -25,7 +25,6 @@
 		name: 'Search',
 		methods: {
 			search(){
-
 				var sdt = $('#txtsearch').val();
 				this.$emit('searchSDT', sdt);
 			}
