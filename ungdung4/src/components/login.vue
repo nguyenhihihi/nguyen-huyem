@@ -9,19 +9,20 @@
 			<div class="col-sm-6 col-md-6 col-xl-6 col-lg-6">
 				<form>
 					<div class="form-group">
-						<label for="txtUsername">Username</label>
+						<label for="txtUsername">Tài khoản</label>
 						<input type="text" class="form-control" id="txtUsername" v-model="username">
 					</div>
 					<div class="form-group">
-						<label for="txtPassword">Password</label>
+						<label for="txtPassword">Mật khẩu</label>
 						<input type="password" class="form-control" id="txtPassword" v-model="password">
 					</div>
 					<button type="button" class="btn btn-block btn-primary" @click="login">
 						<span class="glyphicon glyphicon-user"></span>
 						Đăng nhập
 					</button>
-          <router-link :to = "'/register'" type="button" class="btn btn-block btn-primary">
+          <router-link :to = "'/register'" type="button" class="btn btn-block btn-default">
             <span class="glyphicon glyphicon-plus"></span>
+            <span class="glyphicon glyphicon-user"></span>
             Đăng ký
           </router-link>
 				</form>

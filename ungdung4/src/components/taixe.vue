@@ -1,11 +1,25 @@
 <template>
-	<div>
-		{{title}} lat{{lat}} lng{{lng}} key {{key}}
-		<div id = "map2">
-			
-		</div>
-		<button id = 'xacnhan' @click = "submit">Xác nhận</button>
+	<div class="panel panel-default">
+	<div class="panel-heading">
+		<h2 class="panel-title"><b>{{title}}</b></h2>
+		&nbsp;&nbsp;&nbsp; lat:{{lat}}&nbsp;&nbsp;&nbsp; lng:{{lng}}
 	</div>
+	<div class="panel-body">
+		<div class="containermap">
+			<div class="row">
+				<div class="col-sm-3 col-md-3 col-xl-3 col-lg-3"></div>
+				<div id = "map2" class="col-sm-6 col-md-6 col-xl-6 col-lg-6">
+				<div class="col-sm-3 col-md-3 col-xl-3 col-lg-3"></div>
+			</div>	
+
+			</div>
+			<div class="row">
+				<button id = 'xacnhan' @click = "submit" class="btn btn-block btn-primary">Xác nhận</button>
+			</div>
+		</div> 
+	</div>
+</div>
+
 </template>
 <script>
 import {db} from '../firebase';
@@ -38,7 +52,7 @@ export default {
 	  
 	        var map = new google.maps.Map(document.getElementById('map2'), {
 	          center: {lat: 10.762622, lng: 106.660172},
-	          zoom: 10
+	          zoom: 12
 	        });
 	     //   google.maps.event.setMapOnAll(null);
 	        google.maps.event.addListener(map, 'click', function(event) {

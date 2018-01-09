@@ -1,5 +1,29 @@
 <template>
-	<div>
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h2 class="panel-title"><b>{{title}}</b></h2>
+	</div>
+	<div class="panel-body">
+		<div class="row">
+			<div class="col-sm-3 col-md-3 col-xl-3 col-lg-3"></div>
+			<div class="col-sm-6 col-md-6 col-xl-6 col-lg-6">
+				<div id = "mapdichuyen"></div>
+				<div>
+					<button id = 'btnBatDau' style="display: block;" @click = 
+						"batdau" type="button" class="btn btn-block btn-primary">Bắt đầu</button>
+					<div id='router' style="display: none;" >
+					<router-link :key = "key" :to = "'/finish/' + key" type="button" class="btn btn-block btn-warning">
+						Hoàn tất
+					</router-link>
+				</div>
+				</div>
+			</div>
+			<div class="col-sm-3 col-md-3 col-xl-3 col-lg-3"></div>
+		</div>
+	</div>
+</div>
+<!-- 	<div>
 		{{req}}
 		<button id = 'btnBatDau' style="display: block;" @click = 
 		"batdau">Bat dau</button>
@@ -8,7 +32,7 @@
 			Hoàn tất
 		</router-link>
 	</div>
-	</div>
+	</div> -->
 </template>
 
 <script>
@@ -18,6 +42,7 @@
 		name: 'depart',
 		data(){
 			return{
+				title: "Bản đồ hành trình",
 				taixe: null,
 				req: null,
 				key: "",
@@ -61,6 +86,8 @@
 			ref2.on('value', function(snapshot){
 				self.taixe = snapshot.val();
 				console.log(self.taixe);
+
+				self.initMap(self.taixe.lat, self.taixe.lng, self.req.lat, self.req.long);
 			});
 			});
 		},
@@ -74,7 +101,64 @@
 		var ref = db.ref('reqDatXe')
 		$('#btnBatDau').css('display', 'none');
 		$('#router').css('display', 'block');
-		}
+		},
+		initMap(posXeLat, posXeLong, posKhachLat, posKhachLong) {
+          var posXe = {lat: posXeLat , lng: posXeLong};
+          var posKhach = {lat: posKhachLat, lng: posKhachLong};
+           if (typeof posXe.lat === 'undefined'|| typeof posXe.lng === 'undefined' || typeof posKhach.lat === 'undefined' || typeof posKhach.lng === 'undefined')
+           {   
+            var loi = "</i></b><h4>Đang tải dữ liệu...</h4></b></i>";
+            $('#mapdichuyen').empty();
+            $('#mapdichuyen').append(loi);
+
+            return;
+           }
+
+        var map = new google.maps.Map(document.getElementById('mapdichuyen'), {
+          zoom: 7,
+          center: posXe
+        });
+         var directionDisplay = new google.maps.DirectionsRenderer({
+          map:map
+         });
+
+         var request = {
+          destination: posXe,
+          origin: posKhach,
+          travelMode:'DRIVING'
+         };
+
+         var directionService = new google.maps.DirectionsService();
+
+        directionService.route(request, function(response, status){
+          if (status == 'OK'){
+            directionDisplay.setDirections(response);
+          }
+        });
+
+          google.maps.event.addListener(map, 'click', function(event) {
+          	var ref = db.ref('driver/' + self.keytaixe);
+          	ref.update({lat: event.latLng.lat(), lng:  event.latLng.lng()});
+          //	alert(event.latLng.lat() + ' va ' + event.latLng.lng());
+	        		//setMapOnAll(null);
+	    //     		if (self.daco == 1)
+	    //     		{
+	    //     			// var ll =  new google.LatLng(event.latLng.lat(), event.latLng.lng());
+	    //     			self.marker.setPosition(event.latLng);
+	    //     			self.lat = event.latLng.lat();
+					//  self.lng = event.latLng.lng();
+	    //     			return;
+	    //     		}
+	    //     		//rong.setMap(map);
+					// self.marker = new google.maps.Marker({position: event.latLng, map: map});
+					 
+					//  console.log(event.latLng.lat() + event.latLng.lng());
+					//  self.lat = event.latLng.lat();
+					//  self.lng = event.latLng.lng();
+					//  self.daco = 1;
+
+				});
+      },
 
 			//lay tai xe va request cho vao 2 cái data
 
@@ -84,3 +168,12 @@
 
 	}
 </script>
+  <style type="text/css">
+     #mapdichuyen {
+        height: 700px;
+        width: 100%;
+       }
+       h1{
+          text-align:  center;
+       }
+  </style>
