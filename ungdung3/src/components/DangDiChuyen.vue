@@ -43,12 +43,3 @@
 	}
 </script>
 
-<style>
-/*	tbody {
-		display: block;
-        overflow-y: auto;
-        white-space: nowrap;
-        height: 200px;
-        background-color: #f3f3f3;
-    }*/
-</style>
