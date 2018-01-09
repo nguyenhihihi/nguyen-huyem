@@ -22,10 +22,9 @@ export default {
       taixe:[],
       lat:null,
       lng: null,
-      geocoder: new google.maps.Geocoder(),
-      reverse: new google.maps.Geocoder(),
-      infowindow: new google.maps.InfoWindow,
-      reverse: new google.maps.Geocoder(),
+      geocoder:null,
+      reverse:null,
+      infowindow:null,
       mark: null,
     }
   },
@@ -48,21 +47,31 @@ export default {
     },
     methods:{
       initMap(){
-        const element = document.getElementById("mapName");
-        const options = {
-          zoom:8,
-          center: new google.maps.LatLng(10.756,106.644)
-        }
-        this.map = new google.maps.Map(element, options);
-        var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
-        this.marker = new google.maps.Marker(
+        if(window.google && google.maps)
         {
-            position: {lat: 10.756, lng: 106.644 },
-            draggable: true,
-            icon:image,
-            animation: google.maps.Animation.DROP
+          const element = document.getElementById("mapName");
+          const options = {
+            zoom:8,
+            center: new google.maps.LatLng(10.756,106.644)
+          }
+          this.map = new google.maps.Map(element, options);
+          this.geocoder = new google.maps.Geocoder();
+          this.reverse = new google.maps.Geocoder();
+          this.infowindow = new google.maps.InfoWindow;
+      // reverse: new google.maps.Geocoder(),
+          var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+          this.marker = new google.maps.Marker(
+          {
+              position: {lat: 10.756, lng: 106.644 },
+              draggable: true,
+              icon:image,
+              animation: google.maps.Animation.DROP
 
-        });
+          });
+        }
+        else{
+          alert("Load map");
+        }
       },
       luuid(key){
         var self = this;
@@ -139,7 +148,7 @@ export default {
       ShowMarkerCluster(locations){
         var self = this;
         var labels = 'ABCDEFGHIJ';
-        self.map.setZoom(8);
+        self.map.setZoom(10);
         if(self.markers.length >0)
         {
          self.markerCluster.clearMarkers();
@@ -183,7 +192,7 @@ export default {
                     self.infowindow.close();
                     self.mark.setMap(null);
                   }
-                    self.map.setZoom(8);
+                  self.map.setZoom(10);
                   self.mark = new google.maps.Marker(
                     {
                         position: { lat: 10.762622, lng: 106.65665 }
