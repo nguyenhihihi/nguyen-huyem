@@ -14,35 +14,9 @@ Vue.use(VueFire);
  
 Vue.config.productionTip = false;
 
-// var routes = [
-//   { path: '/', component: Login },
-//   { path: '/BookingHistory/:sdt', 
-//   	component: BookingHistory
-//   	requiresAuth: true
-//    },
-// ];
-
-// Vue.use(VueRouter);
-
-// var router = new VueRouter({
-//   routes
-// });
 
 
 new Vue({
   el: '#app',
   render: h => h(App)
 });
-
-
-// router.beforeEach((to, from, next) => {
-//   if (to.matched.some(record => record.meta.requiresAuth)) {
-//     if (localStorage.access_token && localStorage.access_token === '1234567890') {
-//       next();
-//     } else {
-//       next('login');
-//     }
-//   } else {
-//     next();
-//   }
-// });
