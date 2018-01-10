@@ -50,31 +50,28 @@ export default {
     },
     methods:{
       initMap(){
-        if(window.google && google.maps)
+        const element = document.getElementById("mapName");
+        const options = {
+          zoom:8,
+          center: new google.maps.LatLng(10.756,106.644)
+        }
+        this.map = new google.maps.Map(element, options);
+        this.geocoder = new google.maps.Geocoder();
+        this.reverse = new google.maps.Geocoder();
+        this.infowindow = new google.maps.InfoWindow;
+    // reverse: new google.maps.Geocoder(),
+        var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+        this.marker = new google.maps.Marker(
         {
-          const element = document.getElementById("mapName");
-          const options = {
-            zoom:8,
-            center: new google.maps.LatLng(10.756,106.644)
-          }
-          this.map = new google.maps.Map(element, options);
-          this.geocoder = new google.maps.Geocoder();
-          this.reverse = new google.maps.Geocoder();
-          this.infowindow = new google.maps.InfoWindow;
-      // reverse: new google.maps.Geocoder(),
-          var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
-          this.marker = new google.maps.Marker(
-          {
-              position: {lat: 10.756, lng: 106.644 },
-              draggable: true,
-              icon:image,
-              animation: google.maps.Animation.DROP
+            position: {lat: 10.756, lng: 106.644 },
+            draggable: true,
+            icon:image,
+            animation: google.maps.Animation.DROP
 
-          });
-        }
-        else{
-          alert("Load map");
-        }
+        });
+        // else{
+        //   alert("Load map");
+        // }
       },
       luuid(key){
         var self = this;
@@ -136,9 +133,8 @@ export default {
             alert("Đã định vị nhưng chưa có xe đón");  
             return;
           }
-          if(self.taixe[self.ListDistance[i]["index"]].state ==0 && self.taixe[self.ListDistance[i]["index"]].type == typeOfMoto )
+          if(self.taixe[self.ListDistance[i]["index"]].state ==0 && self.taixe[self.ListDistance[i]["index"]].type == typeOfMoto && self.taixe[self.ListDistance[i]["index"]].key != self.diem.xeRuoc )
           {
-            alert("Hàm nào vậy2");
             var ref = db.ref('reqDatXe/' + self.key);
             ref.update({lat: self.lat, long: self.lng, tinhTrang: "da dinh vi", xeRuoc: self.taixe[self.ListDistance[i]["index"]].key });
             var ref = db.ref('driver/' + self.taixe[self.ListDistance[i]["index"]].key );
@@ -152,7 +148,7 @@ export default {
       ShowMarkerCluster(locations){
         var self = this;
         var labels = 'ABCDEFGHIJ';
-        self.map.setZoom(10);
+        self.map.setZoom(12);
         self.map.setCenter({lat: self.lat, lng:self.lng});
         if(self.markers.length >0)
         {
