@@ -71,6 +71,7 @@ export default {
 	        		}
 	        		//rong.setMap(map);
 					self.marker = new google.maps.Marker({position: event.latLng, map: map});
+					
 					 
 					 console.log(event.latLng.lat() + event.latLng.lng());
 					 self.lat = event.latLng.lat();

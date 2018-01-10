@@ -3,7 +3,7 @@
 		<router-link :to = "'/'">
                  <h4> <span class='glyphicon glyphicon-arrow-left' style="font-size: 16px;"></span> Quay lại </h4>
                 </router-link> 
-		<h1>Đây là bản đồ: {{key}}</h1>
+		<h1>Đây là bản đồ: {{khach.sdt}}</h1>
 		<div id = "map">
 		
 		</div>

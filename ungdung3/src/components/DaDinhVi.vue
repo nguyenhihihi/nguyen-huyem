@@ -45,7 +45,7 @@
 </script>
 
 	
-	
+<!-- 	
 <style>
 	#tabKetQua2 {
         display: block;
@@ -54,4 +54,4 @@
         white-space: nowrap;
         height: 50px;
     }
-</style>
+</style> -->
